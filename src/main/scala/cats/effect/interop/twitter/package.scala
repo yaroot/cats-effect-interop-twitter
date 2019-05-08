@@ -20,20 +20,33 @@ package object twitter {
     }
   }
 
-  def unsafeRunT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
+  def unsafeRunAsyncT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
     val p = Promise[A]()
-    val abortToken = F.runCancelable(f) { result =>
-      val t = result.toTwitterTry
-      IO {
-        val _ = p.updateIfEmpty(t)
+
+    // ??? interrupt handler must be set before unsafeRun?
+    (F.runCancelable(f) _)
+      .andThen(_.map { cancel =>
+        p.setInterruptHandler {
+          case _ => F.toIO(cancel).unsafeRunAsyncAndForget()
+        }
+      })(e => IO.delay { val _ = p.updateIfEmpty(e.toTwitterTry) })
+      .unsafeRunSync()
+
+    p
+  }
+
+  object syntax {
+    implicit class catsEffectTwitterSyntaxUnsafeRun[F[_], A](private val f: F[A]) extends AnyVal {
+      def unsafeRunAsyncT(implicit F: ConcurrentEffect[F]): Future[A] = {
+        twitter.unsafeRunAsyncT(f)
       }
     }
 
-    p.setInterruptHandler {
-      case _ => F.toIO(abortToken.unsafeRunSync()).unsafeRunAsyncAndForget()
+    implicit class catsEffectTwitterSyntaxFromFuture[F[_], A](private val f: F[Future[A]]) extends AnyVal {
+      def fromFuture(implicit F: ConcurrentEffect[F]): F[A] = {
+        twitter.fromFuture(f)
+      }
     }
-
-    p
   }
 
   implicit private class eitherThrowableToTry[A](private val x: Either[Throwable, A]) extends AnyVal {
