@@ -1,21 +1,24 @@
 package cats.effect.interop
 
-import java.util.concurrent.CancellationException
-
 import cats.syntax.all._
 import cats.effect._
-import com.twitter.util.{Future, Promise, Return, Throw, Try}
+import com.twitter.util.{Future, FutureCancelledException, Promise, Return, Throw, Try}
 
 package object twitter {
   def fromFuture[F[_], A](f: F[Future[A]])(implicit F: ConcurrentEffect[F]): F[A] = {
     f.flatMap { future =>
-      F.cancelable { callback =>
-        future.respond {
-          case Return(a) => callback(a.asRight)
-          case Throw(e)  => callback(e.asLeft)
-        }
+      future.poll match {
+        case Some(Return(a)) => F.pure(a)
+        case Some(Throw(e))  => F.raiseError(e)
+        case None =>
+          F.cancelable { cb =>
+            future.respond {
+              case Return(a) => cb(a.asRight)
+              case Throw(e)  => cb(e.asLeft)
+            }
 
-        F.delay(future.raise(new CancellationException))
+            F.delay(future.raise(new FutureCancelledException))
+          }
       }
     }
   }
@@ -29,7 +32,7 @@ package object twitter {
         p.setInterruptHandler {
           case _ => F.toIO(cancel).unsafeRunAsyncAndForget()
         }
-      })(e => IO.delay { val _ = p.updateIfEmpty(e.toTwitterTry) })
+      })(e => IO.delay { val _ = p.updateIfEmpty(e.fold(Throw(_), Return(_))) })
       .unsafeRunSync()
 
     p
@@ -46,12 +49,6 @@ package object twitter {
       def fromFuture(implicit F: ConcurrentEffect[F]): F[A] = {
         twitter.fromFuture(f)
       }
-    }
-  }
-
-  implicit private class eitherThrowableToTry[A](private val x: Either[Throwable, A]) extends AnyVal {
-    def toTwitterTry: Try[A] = {
-      x.fold(Throw(_), Return(_))
     }
   }
 }
