@@ -1,0 +1,11 @@
+version: 2.1
+jobs:
+ build:
+   docker:
+     - image: mcr.microsoft.com/java/jdk:11u3-zulu-centos
+   steps:
+     - run:
+         name: test
+         command: |
+           curl https://raw.githubusercontent.com/paulp/sbt-extras/master/sbt > sbt && chmod +x sbt
+           ./sbt +test +publishM2
