@@ -1,8 +1,9 @@
-version: 2.1
+version: 2.0
 jobs:
   build:
     docker:
-      - image: mcr.microsoft.com/java/jdk:11u3-zulu-centos
+      - image: circleci/8-jdk
+      # - image: mcr.microsoft.com/java/jdk:11u3-zulu-centos
     steps:
       - checkout
       - run:
