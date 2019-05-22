@@ -60,7 +60,7 @@ fork in run := true
 libraryDependencies ++= {
   Seq(
     "org.typelevel" %% "cats-effect"    % "1.3.0",
-    "com.twitter"   %% "util-core"      % "19.4.0",
+    "com.twitter"   %% "util-core"      % "19.5.1",
     "org.specs2"    %% "specs2-core" % "4.5.1" % "test",
   )
 }
@@ -68,7 +68,7 @@ libraryDependencies ++= {
 addCompilerPlugin("org.spire-math"   % "kind-projector"      % "0.9.10" cross CrossVersion.binary)
 addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.0")
 addCompilerPlugin("org.scalamacros"  %% "paradise"           % "2.1.1" cross CrossVersion.full)
-addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.0.7" cross CrossVersion.full)
+addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.0.8" cross CrossVersion.full)
 
 scalafmtOnCompile := true
 cancelable in Global := true
