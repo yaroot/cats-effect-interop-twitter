@@ -17,9 +17,7 @@ package object twitter {
               case Throw(e)  => cb(e.asLeft)
             }
 
-            F.delay {
-              future.raise(new FutureCancelledException)
-            }
+            F.uncancelable(F.delay(future.raise(new FutureCancelledException)))
           }
       }
     }

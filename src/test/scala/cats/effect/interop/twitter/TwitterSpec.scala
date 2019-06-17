@@ -65,14 +65,12 @@ class TwitterSpec extends Specification {
       }
 
       val value = for {
-        pb    <- Deferred[IO, String]
-        a     = IO(pa.delayed(Duration.fromMilliseconds(10)).map(_ => c.incrementAndGet())).fromFuture
-        b     = pb.get
-        fiber <- F.start(IO.race(a, b))
-        _     <- pb.complete("OK")
-        // FIXME the cancellation runs on a threadpool
-        _      = TimeUnit.MILLISECONDS.sleep(50)
-        _      = pa.setDone()
+        pb     <- Deferred[IO, String]
+        a      = IO(pa.delayed(Duration.fromMilliseconds(10)).map(_ => c.incrementAndGet())).fromFuture
+        b      = pb.get
+        fiber  <- F.start(IO.race(a, b))
+        _      <- pb.complete("OK")
+        _      = Await.ready(pa, Duration.fromSeconds(10)) // nondeterministic, the cancellation runs on a threadpool
         result <- fiber.join
       } yield result
 
@@ -99,7 +97,6 @@ class TwitterSpec extends Specification {
         fa       = deferred.get.attempt >> IO(c.incrementAndGet())
         f        = fa.unsafeRunAsyncT
         _        = f.raise(new TimeoutException("timeout"))
-        _        = TimeUnit.MILLISECONDS.sleep(100)
         _        <- deferred.complete(())
       } yield c.get()
 
