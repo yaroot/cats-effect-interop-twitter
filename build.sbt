@@ -2,7 +2,7 @@
 name := "cats-effect-interop-twitter"
 organization := "com.github.yaroot"
 scalaVersion := "2.12.8"
-crossScalaVersions := Seq("2.12.8", "2.11.12") //"2.13.0-M5"
+crossScalaVersions := Seq("2.12.8", "2.11.12")
 
 scalacOptions := Seq(
   "-deprecation",                     // Emit warning and location for usages of deprecated APIs.
@@ -59,16 +59,16 @@ fork in run := true
 
 libraryDependencies ++= {
   Seq(
-    "org.typelevel" %% "cats-effect"    % "1.3.1",
-    "com.twitter"   %% "util-core"      % "19.6.0",
-    "org.specs2"    %% "specs2-core" % "4.5.1" % "test",
+    "org.typelevel" %% "cats-effect" % "1.3.1",
+    "com.twitter"   %% "util-core"   % "19.7.0",
+    "org.specs2"    %% "specs2-core" % "4.6.0" % "test",
   )
 }
 
 addCompilerPlugin("org.spire-math"   % "kind-projector"      % "0.9.10" cross CrossVersion.binary)
 addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.0")
 addCompilerPlugin("org.scalamacros"  %% "paradise"           % "2.1.1" cross CrossVersion.full)
-addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.0.8" cross CrossVersion.full)
+addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.0.9" cross CrossVersion.full)
 
 scalafmtOnCompile := true
 cancelable in Global := true
