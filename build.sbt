@@ -66,7 +66,7 @@ libraryDependencies ++= {
 }
 
 addCompilerPlugin("org.spire-math"   % "kind-projector"      % "0.9.10" cross CrossVersion.binary)
-addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.0")
+addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.1")
 addCompilerPlugin("org.scalamacros"  %% "paradise"           % "2.1.1" cross CrossVersion.full)
 addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.0.9" cross CrossVersion.full)
 
