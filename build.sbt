@@ -1,8 +1,8 @@
 // format: off
 name := "cats-effect-interop-twitter"
 organization := "com.github.yaroot"
-scalaVersion := "2.12.9"
-crossScalaVersions := Seq("2.12.9", "2.11.12")
+scalaVersion := "2.12.10"
+crossScalaVersions := Seq("2.12.10", "2.11.12", "2.13.1")
 
 scalacOptions := Seq(
   "-deprecation",                     // Emit warning and location for usages of deprecated APIs.
@@ -16,9 +16,9 @@ scalacOptions := Seq(
   "-unchecked",                       // Enable additional warnings where generated code depends on assumptions.
   "-Xcheckinit",                      // Wrap field accessors to throw an exception on uninitialized access.
   "-Xfatal-warnings",                 // Fail the compilation if there are any warnings.
-  "-Xfuture",                         // Turn on future language features.
+  // "-Xfuture",                         // Turn on future language features.
   "-Xlint:adapted-args",              // Warn if an argument list is modified to match the receiver.
-  "-Xlint:by-name-right-associative", // By-name parameter of right associative operator.
+  // "-Xlint:by-name-right-associative", // By-name parameter of right associative operator.
   // "-Xlint:constant",                  // Evaluation of a constant arithmetic expression results in an error.
   "-Xlint:delayedinit-select",        // Selecting member of DelayedInit.
   "-Xlint:doc-detached",              // A Scaladoc comment appears to be detached from its element.
@@ -33,15 +33,15 @@ scalacOptions := Seq(
   "-Xlint:private-shadow",            // A private field (or class parameter) shadows a superclass field.
   "-Xlint:stars-align",               // Pattern sequence wildcard must align with sequence component.
   "-Xlint:type-parameter-shadow",     // A local type parameter shadows a type already in scope.
-  "-Xlint:unsound-match",             // Pattern match may not be typesafe.
-  "-Yno-adapted-args",                // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
-  "-Ypartial-unification",            // Enable partial unification in type constructor inference
+  // "-Xlint:unsound-match",             // Pattern match may not be typesafe.
+  // "-Yno-adapted-args",                // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
+  // "-Ypartial-unification",            // Enable partial unification in type constructor inference
   "-Ywarn-dead-code",                 // Warn when dead code is identified.
   // "-Ywarn-extra-implicit",            // Warn when more than one implicit parameter section is defined.
-  "-Ywarn-inaccessible",              // Warn about inaccessible types in method signatures.
-  "-Ywarn-infer-any",                 // Warn when a type argument is inferred to be `Any`.
-  "-Ywarn-nullary-override",          // Warn when non-nullary `def f()' overrides nullary `def f'.
-  "-Ywarn-nullary-unit",              // Warn when nullary methods return Unit.
+  // "-Ywarn-inaccessible",              // Warn about inaccessible types in method signatures.
+  // "-Ywarn-infer-any",                 // Warn when a type argument is inferred to be `Any`.
+  // "-Ywarn-nullary-override",          // Warn when non-nullary `def f()' overrides nullary `def f'.
+  // "-Ywarn-nullary-unit",              // Warn when nullary methods return Unit.
   "-Ywarn-numeric-widen",             // Warn when numerics are widened.
   // "-Ywarn-unused:implicits",          // Warn if an implicit parameter is unused.
   // "-Ywarn-unused:imports",            // Warn if an import selector is not referenced.
@@ -65,10 +65,10 @@ libraryDependencies ++= {
   )
 }
 
-addCompilerPlugin("org.spire-math"   % "kind-projector"      % "0.9.10" cross CrossVersion.binary)
-addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.1")
-addCompilerPlugin("org.scalamacros"  %% "paradise"           % "2.1.1" cross CrossVersion.full)
-addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.1.0" cross CrossVersion.full)
+// addCompilerPlugin("org.spire-math"   % "kind-projector"      % "0.9.10" cross CrossVersion.binary)
+// addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.3.1")
+// addCompilerPlugin("org.scalamacros"  %% "paradise"           % "2.1.1" cross CrossVersion.full)
+// addCompilerPlugin("com.github.cb372" % "scala-typed-holes"   % "0.1.0" cross CrossVersion.full)
 
 scalafmtOnCompile := true
 cancelable in Global := true
