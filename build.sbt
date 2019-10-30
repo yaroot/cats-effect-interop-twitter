@@ -2,7 +2,7 @@
 name := "cats-effect-interop-twitter"
 organization := "com.github.yaroot"
 scalaVersion := "2.12.10"
-crossScalaVersions := Seq("2.12.10", "2.11.12", "2.13.1")
+crossScalaVersions := Seq("2.12.10", "2.13.1")
 
 scalacOptions := Seq(
   "-deprecation",                     // Emit warning and location for usages of deprecated APIs.
