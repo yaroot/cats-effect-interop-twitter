@@ -2,7 +2,10 @@ package cats.effect.interop
 
 import cats.syntax.all._
 import cats.effect._
-import com.twitter.util.{Future, FutureCancelledException, Promise, Return, Throw, Try}
+import com.twitter.util.{Duration, Future, FutureCancelledException, Promise, Return, Throw, Timer => TTimer}
+
+import scala.concurrent.duration.FiniteDuration
+import scala.util.Try
 
 package object twitter {
   def fromFuture[F[_], A](f: F[Future[A]])(implicit F: ConcurrentEffect[F]): F[A] = {
@@ -36,6 +39,20 @@ package object twitter {
       .unsafeRunSync()
 
     p
+  }
+
+  def timer[F[_]: Concurrent](twitter: TTimer): Timer[F] = {
+    new Timer[F] {
+      override def clock: Clock[F] = Clock.create[F]
+      override def sleep(duration: FiniteDuration): F[Unit] =
+        Concurrent[F].cancelable { cb =>
+          val timeout = Duration(duration.length, duration.unit)
+          for {
+            token <- Sync[F].fromTry(Try(twitter.schedule(timeout)(cb(().asRight))))
+            _     <- Sync[F].fromTry(Try(token.cancel()))
+          } yield ()
+        }
+    }
   }
 
   object syntax {
