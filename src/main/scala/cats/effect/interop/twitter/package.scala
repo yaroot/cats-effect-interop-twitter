@@ -2,7 +2,7 @@ package cats.effect.interop
 
 import cats.syntax.all._
 import cats.effect._
-import com.twitter.util.{Duration, Future, FutureCancelledException, Promise, Return, Throw, Timer => TTimer}
+import com.twitter.util.{Duration, Future, FutureCancelledException, Promise, Return, Throw, Timer => TwitterTimer}
 
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Try
@@ -41,7 +41,7 @@ package object twitter {
     p
   }
 
-  def timer[F[_]: Concurrent](twitter: TTimer): Timer[F] = {
+  def timer[F[_]: Concurrent](twitter: TwitterTimer): Timer[F] = {
     new Timer[F] {
       override def clock: Clock[F] = Clock.create[F]
       override def sleep(duration: FiniteDuration): F[Unit] =

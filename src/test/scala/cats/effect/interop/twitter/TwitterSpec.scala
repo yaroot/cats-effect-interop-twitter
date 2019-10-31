@@ -14,6 +14,7 @@ import cats.effect.internals.IOAppPlatform
 import com.twitter.util.{Await, Duration, Future, JavaTimer, Promise, Throw, TimeoutException}
 
 import scala.concurrent.CancellationException
+import scala.concurrent.duration._
 
 class TwitterSpec extends Specification {
   implicit val timer: JavaTimer               = new JavaTimer(true)
@@ -86,7 +87,7 @@ class TwitterSpec extends Specification {
     }
 
     "execute async IO[A]" >> {
-      Await.result(unsafeRunAsyncT(IO.sleep(FiniteDuration(100, MILLISECONDS)).map(_ => 1))) must_== 1
+      Await.result(unsafeRunAsyncT(IO.sleep(100.millis).map(_ => 1))) must_== 1
     }
 
     "cancel IO" >> {
@@ -105,4 +106,24 @@ class TwitterSpec extends Specification {
 
   }
 
+  "timer should" >> {
+    implicit val timer: Timer[IO] = cats.effect.interop.twitter.timer[IO](new com.twitter.util.JavaTimer(true))
+
+    "run scheduled task" >> {
+      val f = timer.sleep(1.second) >> 1.pure[IO]
+      f.unsafeRunSync() should_== 1
+    }
+
+    "should be cancelled after being interrupted" >> {
+      val i = new AtomicInteger(0)
+      val f = for {
+        g <- (timer.sleep(1.second) >> F.delay(i.set(1))).start
+        _ <- g.cancel
+        _ <- timer.sleep(2.seconds)
+      } yield i.get()
+
+      f.unsafeRunSync() should_== 0
+    }
+
+  }
 }
