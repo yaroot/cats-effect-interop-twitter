@@ -1,15 +1,12 @@
 package cats.effect.interop.twitter
 
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
-import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 import cats.effect.interop.twitter.syntax._
 import org.specs2.mutable.Specification
 import cats.implicits._
 import cats.effect._
 import cats.effect.concurrent.Deferred
-import cats.effect.implicits._
 import cats.effect.internals.IOAppPlatform
 import com.twitter.util.{Await, Duration, Future, JavaTimer, Promise, Throw, TimeoutException}
 
