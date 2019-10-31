@@ -17,7 +17,7 @@ import scala.concurrent.CancellationException
 import scala.concurrent.duration._
 
 class TwitterSpec extends Specification {
-  implicit val timer: JavaTimer               = new JavaTimer(true)
+  implicit val twitterTimer: JavaTimer        = new JavaTimer(true)
   implicit val contextShift: ContextShift[IO] = IOAppPlatform.defaultContextShift
   implicit val ioTimer: Timer[IO]             = IOAppPlatform.defaultTimer
   val F: ConcurrentEffect[IO]                 = ConcurrentEffect[IO]
@@ -107,7 +107,7 @@ class TwitterSpec extends Specification {
   }
 
   "timer should" >> {
-    implicit val timer: Timer[IO] = cats.effect.interop.twitter.timer[IO](new com.twitter.util.JavaTimer(true))
+    implicit val timer: Timer[IO] = cats.effect.interop.twitter.timer[IO](twitterTimer)
 
     "run scheduled task" >> {
       val f = timer.sleep(1.second) >> 1.pure[IO]
