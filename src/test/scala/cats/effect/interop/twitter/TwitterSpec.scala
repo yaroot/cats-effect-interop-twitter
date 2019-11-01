@@ -10,7 +10,6 @@ import cats.effect.concurrent.Deferred
 import cats.effect.internals.IOAppPlatform
 import com.twitter.util.{Await, Duration, Future, JavaTimer, Promise, Throw, TimeoutException}
 
-import scala.concurrent.CancellationException
 import scala.concurrent.duration._
 
 class TwitterSpec extends Specification {
@@ -58,15 +57,15 @@ class TwitterSpec extends Specification {
       val c = new AtomicInteger(0)
       val pa = new Promise[Unit] with Promise.InterruptHandler {
         override protected def onInterrupt(t: Throwable): Unit = {
-          val _ = updateIfEmpty(Throw(new CancellationException().initCause(t)))
+          val _ = updateIfEmpty(Throw(t))
         }
       }
 
       val value = for {
         pb     <- Deferred[IO, String]
-        a      = IO(pa.delayed(Duration.fromMilliseconds(10)).map(_ => c.incrementAndGet())).fromFuture
+        a      = IO(pa.delayed(Duration.fromSeconds(10)).map(_ => c.incrementAndGet())).fromFuture
         b      = pb.get
-        fiber  <- F.start(IO.race(a, b))
+        fiber  <- IO.race(a, b).start
         _      <- pb.complete("OK")
         _      = Await.ready(pa, Duration.fromSeconds(10)) // nondeterministic, the cancellation runs on a threadpool
         result <- fiber.join
