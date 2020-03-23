@@ -27,7 +27,12 @@ package object twitter {
     }
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Nothing", "org.wartremover.warts.Product", "org.wartremover.warts.Serializable"))
+  @SuppressWarnings(
+    Array("org.wartremover.warts.Nothing",
+          "org.wartremover.warts.Product",
+          "org.wartremover.warts.Serializable",
+          "org.wartremover.warts.JavaSerializable")
+  )
   def unsafeRunAsyncT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
     val p = Promise[A]()
 
