@@ -9,7 +9,6 @@ import com.twitter.util.{
   Promise,
   Return,
   Throw,
-  Time,
   Timer => TwitterTimer
 }
 
@@ -63,22 +62,11 @@ package object twitter {
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
-  def timer[F[_]: Concurrent](timer: TwitterTimer): Timer[F] = {
+  def timer[F[_]: ConcurrentEffect](timer: TwitterTimer): Timer[F] = {
     new Timer[F] {
       override def clock: Clock[F] = Clock.create[F]
       override def sleep(duration: FiniteDuration): F[Unit] =
-        Concurrent[F].cancelable { cb =>
-          def complete(): Unit = cb(().asRight)
-
-          val at = Time.now + fromDuration(duration)
-          val token = timer.schedule(at) {
-            complete()
-          }
-
-          Sync[F].delay {
-            token.cancel()
-          }
-        }
+        fromFuture(Sync[F].delay(Future.sleep(fromDuration(duration))(timer)))
     }
   }
 
