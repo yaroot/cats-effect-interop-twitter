@@ -22,7 +22,7 @@ package object twitter {
       future.poll match {
         case Some(Return(a)) => F.pure(a)
         case Some(Throw(e))  => F.raiseError(e)
-        case None            =>
+        case None =>
           F.cancelable { cb =>
             val _ = future.respond {
               case Return(a) => cb(a.asRight)
@@ -36,12 +36,10 @@ package object twitter {
   }
 
   @SuppressWarnings(
-    Array(
-      "org.wartremover.warts.Nothing",
-      "org.wartremover.warts.Product",
-      "org.wartremover.warts.Serializable",
-      "org.wartremover.warts.JavaSerializable"
-    )
+    Array("org.wartremover.warts.Nothing",
+          "org.wartremover.warts.Product",
+          "org.wartremover.warts.Serializable",
+          "org.wartremover.warts.JavaSerializable")
   )
   def unsafeRunAsyncT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
     val p = Promise[A]()
@@ -67,12 +65,12 @@ package object twitter {
   @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   def timer[F[_]: Concurrent](timer: TwitterTimer): Timer[F] = {
     new Timer[F] {
-      override def clock: Clock[F]                          = Clock.create[F]
+      override def clock: Clock[F] = Clock.create[F]
       override def sleep(duration: FiniteDuration): F[Unit] =
         Concurrent[F].cancelable { cb =>
           def complete(): Unit = cb(().asRight)
 
-          val at    = Time.now + fromDuration(duration)
+          val at = Time.now + fromDuration(duration)
           val token = timer.schedule(at) {
             complete()
           }
