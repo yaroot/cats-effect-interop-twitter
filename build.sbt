@@ -1,7 +1,7 @@
 name := "cats-effect-interop-twitter"
 organization := "com.github.yaroot"
-scalaVersion := "2.12.11"
-crossScalaVersions := Seq("2.12.11", "2.13.1")
+scalaVersion := "2.13.2"
+crossScalaVersions := Seq("2.12.11", "2.13.2")
 
 fork in run := true
 
