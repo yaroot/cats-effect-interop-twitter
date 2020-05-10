@@ -7,8 +7,8 @@ fork in run := true
 
 libraryDependencies ++= {
   Seq(
-    "org.typelevel" %% "cats-effect" % "2.1.2",
-    "com.twitter"   %% "util-core"   % "20.3.0",
+    "org.typelevel" %% "cats-effect" % "2.1.3",
+    "com.twitter"   %% "util-core"   % "20.4.0",
     "org.specs2"    %% "specs2-core" % "4.9.2" % "test",
   )
 }
