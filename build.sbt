@@ -10,7 +10,7 @@ libraryDependencies ++= {
     "org.typelevel"  %% "cats-effect"                  % "2.1.3",
     "com.twitter"    %% "util-core"                    % "20.4.1",
     "io.monix"       %% "minitest"                     % "2.8.2",
-    "com.codecommit" %% "cats-effect-testing-minitest" % "0.4.0"
+    "com.codecommit" %% "cats-effect-testing-minitest" % "0.4.1"
   )
 }
 
