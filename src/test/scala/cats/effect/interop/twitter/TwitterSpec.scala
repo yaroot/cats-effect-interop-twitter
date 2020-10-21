@@ -14,14 +14,14 @@ import scala.concurrent.duration._
 object TwitterSpec extends IOTestSuite {
   implicit val twitterTimer: JavaTimer = new JavaTimer(true)
 
-  val P: IO[Promise[Unit]]  = IO(Promise[Unit])
+  val P: IO[Promise[Unit]]  = IO(Promise[Unit]())
   val AT: IO[AtomicInteger] = IO(new AtomicInteger(0))
 
   test("delayed value") {
     for {
       p     <- P
       fiber <- IO(p.map(_ => 5)).fromFuture.start
-      _     = p.setDone()
+      _      = p.setDone()
       i     <- fiber.join
     } yield assert(i == 5)
   }
@@ -48,13 +48,13 @@ object TwitterSpec extends IOTestSuite {
   test("cancel the underlying future") {
     for {
       c      <- AT
-      pa     = Future.sleep(Duration.fromMilliseconds(100))
+      pa      = Future.sleep(Duration.fromMilliseconds(100))
       pb     <- Deferred[IO, String]
-      a      = IO(pa.map(_ => c.incrementAndGet())).fromFuture
-      b      = pb.get
+      a       = IO(pa.map(_ => c.incrementAndGet())).fromFuture
+      b       = pb.get
       fiber  <- IO.race(a, b).start
       _      <- pb.complete("OK") >> IO.sleep(300.millis)
-      _      = Await.ready(pa)
+      _       = Await.ready(pa)
       ra     <- IO(pa: Future[Unit]).fromFuture.attempt
       result <- fiber.join
     } yield {
@@ -76,9 +76,9 @@ object TwitterSpec extends IOTestSuite {
     for {
       c        <- AT
       deferred <- Deferred[IO, Unit]
-      fa       = deferred.get.attempt >> IO(c.incrementAndGet())
-      f        = fa.unsafeRunAsyncT
-      _        = f.raise(new TimeoutException("timeout"))
+      fa        = deferred.get.attempt >> IO(c.incrementAndGet())
+      f         = fa.unsafeRunAsyncT
+      _         = f.raise(new TimeoutException("timeout"))
       _        <- deferred.complete(())
     } yield {
       assert(c.get() === 0)
@@ -97,7 +97,7 @@ object TwitterSpec extends IOTestSuite {
   test("should be cancelled after being interrupted") {
     for {
       c <- AT
-      g = (twitterIOTimer.sleep(100.millis) >> IO(c.incrementAndGet()))
+      g  = (twitterIOTimer.sleep(100.millis) >> IO(c.incrementAndGet()))
       a <- IO.race(g, IO.unit)
       _ <- IO.sleep(200.millis)
     } yield {

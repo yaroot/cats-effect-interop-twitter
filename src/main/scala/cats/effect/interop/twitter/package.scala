@@ -2,15 +2,7 @@ package cats.effect.interop
 
 import cats.syntax.all._
 import cats.effect._
-import com.twitter.util.{
-  Duration,
-  Future,
-  FutureCancelledException,
-  Promise,
-  Return,
-  Throw,
-  Timer => TwitterTimer
-}
+import com.twitter.util.{Duration, Future, FutureCancelledException, Promise, Return, Throw, Timer => TwitterTimer}
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -21,7 +13,7 @@ package object twitter {
       future.poll match {
         case Some(Return(a)) => F.pure(a)
         case Some(Throw(e))  => F.raiseError(e)
-        case None =>
+        case None            =>
           F.cancelable { cb =>
             val _ = future.respond {
               case Return(a) => cb(a.asRight)
@@ -35,10 +27,12 @@ package object twitter {
   }
 
   @SuppressWarnings(
-    Array("org.wartremover.warts.Nothing",
-          "org.wartremover.warts.Product",
-          "org.wartremover.warts.Serializable",
-          "org.wartremover.warts.JavaSerializable")
+    Array(
+      "org.wartremover.warts.Nothing",
+      "org.wartremover.warts.Product",
+      "org.wartremover.warts.Serializable",
+      "org.wartremover.warts.JavaSerializable"
+    )
   )
   def unsafeRunAsyncT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
     val p = Promise[A]()
@@ -46,10 +40,9 @@ package object twitter {
     // ??? interrupt handler must be set before unsafeRun?
     (F.runCancelable(f) _)
       .andThen(_.map { cancel =>
-        p.setInterruptHandler {
-          case e =>
-            val _ = p.updateIfEmpty(Throw(e))
-            F.toIO(cancel).unsafeRunAsyncAndForget()
+        p.setInterruptHandler { case e =>
+          val _ = p.updateIfEmpty(Throw(e))
+          F.toIO(cancel).unsafeRunAsyncAndForget()
         }
       })(e => IO.delay { val _ = p.updateIfEmpty(e.fold(Throw(_), Return(_))) })
       .unsafeRunSync()
@@ -64,7 +57,7 @@ package object twitter {
   @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   def timer[F[_]: ConcurrentEffect](timer: TwitterTimer): Timer[F] = {
     new Timer[F] {
-      override def clock: Clock[F] = Clock.create[F]
+      override def clock: Clock[F]                          = Clock.create[F]
       override def sleep(duration: FiniteDuration): F[Unit] =
         fromFuture(Sync[F].delay(Future.sleep(fromDuration(duration))(timer)))
     }
