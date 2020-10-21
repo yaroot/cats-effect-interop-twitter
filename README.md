@@ -1,1 +1,1 @@
-![CI](https://github.com/yaroot/cats-effect-interop-twitter/workflows/CI/badge.svg)
+![CI](https://github.com/quasi-category/cats-effect-interop-twitter/workflows/CI/badge.svg)
