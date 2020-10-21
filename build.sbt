@@ -17,10 +17,7 @@ libraryDependencies ++= {
 scalafmtOnCompile := true
 cancelable in Global := true
 
-wartremoverErrors in (Compile, compile) ++= Warts.all
-
 testFrameworks += new TestFramework("minitest.runner.Framework")
 
 version ~= (_.replace('+', '-'))
 dynver ~= (_.replace('+', '-'))
-

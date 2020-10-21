@@ -7,7 +7,6 @@ import com.twitter.util.{Duration, Future, FutureCancelledException, Promise, Re
 import scala.concurrent.duration.FiniteDuration
 
 package object twitter {
-  @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   def fromFuture[F[_], A](f: F[Future[A]])(implicit F: ConcurrentEffect[F]): F[A] = {
     f.flatMap { future =>
       future.poll match {
@@ -26,14 +25,6 @@ package object twitter {
     }
   }
 
-  @SuppressWarnings(
-    Array(
-      "org.wartremover.warts.Nothing",
-      "org.wartremover.warts.Product",
-      "org.wartremover.warts.Serializable",
-      "org.wartremover.warts.JavaSerializable"
-    )
-  )
   def unsafeRunAsyncT[F[_], A](f: F[A])(implicit F: ConcurrentEffect[F]): Future[A] = {
     val p = Promise[A]()
 
@@ -54,7 +45,6 @@ package object twitter {
     Duration(f.length, f.unit)
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   def timer[F[_]: ConcurrentEffect](timer: TwitterTimer): Timer[F] = {
     new Timer[F] {
       override def clock: Clock[F]                          = Clock.create[F]
