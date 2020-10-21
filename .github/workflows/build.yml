@@ -11,4 +11,9 @@ jobs:
       with:
         java-version: zulu@1.8
     - uses: coursier/cache-action@v3
-    - run: sbt +test 
+    - run: sbt +test
+    - run: sbt +publishM2
+    - use: actions/upload-artifact@v1
+      with:
+        name: repository
+        path: ~/.m2/repository
