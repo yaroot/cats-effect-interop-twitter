@@ -13,7 +13,7 @@ jobs:
     - uses: coursier/cache-action@v3
     - run: sbt +test
     - run: sbt +publishM2
-    - use: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v2
       with:
         name: repository
         path: ~/.m2/repository
