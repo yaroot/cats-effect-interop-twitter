@@ -1,0 +1,2 @@
+publishTo := Some("Github Package Registry" at "https://maven.pkg.github.com/quasi-category/cats-effect-interop-twitter")
+credentials += Credentials("GitHub Package Registry", "maven.pkg.github.com", "quasi-category", scala.sys.env.getOrElse("GITHUB_TOKEN", ""))

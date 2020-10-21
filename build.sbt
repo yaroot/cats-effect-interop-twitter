@@ -23,3 +23,4 @@ testFrameworks += new TestFramework("minitest.runner.Framework")
 
 version ~= (_.replace('+', '-'))
 dynver ~= (_.replace('+', '-'))
+
