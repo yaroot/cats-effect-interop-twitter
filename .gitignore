@@ -1,6 +1,7 @@
-.idea/
-target/
-.metals
-.cache
 *.iml
 .bloop
+.bsp
+.cache
+.idea/
+.metals
+target/
