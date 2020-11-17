@@ -9,7 +9,7 @@ libraryDependencies ++= {
   Seq(
     "org.typelevel"  %% "cats-effect"                  % "2.2.0",
     "com.twitter"    %% "util-core"                    % "20.10.0",
-    "io.monix"       %% "minitest"                     % "2.8.2",
+    "io.monix"       %% "minitest"                     % "2.9.0",
     "com.codecommit" %% "cats-effect-testing-minitest" % "0.4.2"
   )
 }
