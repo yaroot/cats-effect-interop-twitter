@@ -7,7 +7,7 @@ fork in run := true
 
 libraryDependencies ++= {
   Seq(
-    "org.typelevel"  %% "cats-effect"                  % "2.2.0",
+    "org.typelevel"  %% "cats-effect"                  % "2.3.0",
     "com.twitter"    %% "util-core"                    % "20.10.0",
     "io.monix"       %% "minitest"                     % "2.9.1",
     "com.codecommit" %% "cats-effect-testing-minitest" % "0.4.2"
