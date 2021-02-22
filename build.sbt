@@ -1,5 +1,5 @@
 name := "cats-effect-interop-twitter"
-organization := "com.github.quasi-category"
+organization := "com.github.yaroot"
 scalaVersion := "2.13.3"
 crossScalaVersions := Seq("2.12.11", "2.13.3")
 
